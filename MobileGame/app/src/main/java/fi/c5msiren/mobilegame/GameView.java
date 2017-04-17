@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -27,9 +28,10 @@ public class GameView extends SurfaceView implements Runnable {
 
     // Array of obstacles
     private Obstacle[] obstacles;
-
     // Amount of obstacles
     private int obstacleCount = 3;
+
+    private boolean isGameOver;
 
     public GameView(Context context, int screenX, int screenY) {
         super(context);
@@ -46,6 +48,8 @@ public class GameView extends SurfaceView implements Runnable {
         for (int i = 0; i < obstacleCount; i++) {
             obstacles[i] = new Obstacle(context, screenX, screenY);
         }
+
+        isGameOver = false;
     }
 
     @Override
@@ -85,6 +89,15 @@ public class GameView extends SurfaceView implements Runnable {
         // Updating the obstacle coordinate with respect to player speed
         for (int i = 0; i < obstacleCount; i++) {
             obstacles[i].update(player.getSpeed());
+        }
+
+        for (int i = 0; i < obstacleCount; i++) {
+            if (Rect.intersects(player.getDetectCollision(), obstacles[i].getDetectCollision())) {
+                //setting playing false to stop the game
+                playing = false;
+                //setting the isGameOver true as the game is over
+                isGameOver = true;
+            }
         }
     }
 
