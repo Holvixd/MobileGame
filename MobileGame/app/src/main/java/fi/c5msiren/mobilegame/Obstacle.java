@@ -44,12 +44,12 @@ public class Obstacle {
     }
 
     public void update(int playerSpeed) {
-        //decreasing x coordinate so that enemy will move right to left
+        //decreasing x coordinate so that obstacle will move right to left
         x -= playerSpeed;
         x -= speed;
-        //if the enemy reaches the left edge
+        //if the obstalce reaches the left edge
         if (x < minX - obstacleBitmap.getWidth()) {
-            //adding the enemy again to the right top or bottom edge
+            //adding the obstacle again to the right top or bottom edge
             Random generator = new Random();
             int position = generator.nextInt((1 - 0) + 1) + 0;
             speed = generator.nextInt(10) + 10;
