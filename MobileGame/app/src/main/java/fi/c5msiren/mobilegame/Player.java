@@ -51,7 +51,7 @@ public class Player {
         if (accelerating) {
             speed += accelerationSpeed;
         } else {
-            speed -= 5;
+            speed -= accelerationSpeed;
         }
 
         // Boundary for maximum speed
