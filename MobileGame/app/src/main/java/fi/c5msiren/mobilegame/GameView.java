@@ -25,6 +25,12 @@ public class GameView extends SurfaceView implements Runnable {
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
+    // Array of obstacles
+    private Obstacle[] obstacles;
+
+    // Amount of obstacles
+    private int obstacleCount = 3;
+
     public GameView(Context context, int screenX, int screenY) {
         super(context);
 
@@ -34,6 +40,12 @@ public class GameView extends SurfaceView implements Runnable {
         //initializing drawing objects
         surfaceHolder = getHolder();
         paint = new Paint();
+
+        // Initializing obstacle array
+        obstacles = new Obstacle[obstacleCount];
+        for (int i = 0; i < obstacleCount; i++) {
+            obstacles[i] = new Obstacle(context, screenX, screenY);
+        }
     }
 
     @Override
@@ -69,6 +81,11 @@ public class GameView extends SurfaceView implements Runnable {
     private void update() {
         // Update player position
         player.update();
+
+        // Updating the obstacle coordinate with respect to player speed
+        for (int i = 0; i < obstacleCount; i++) {
+            obstacles[i].update(player.getSpeed());
+        }
     }
 
     private void draw() {
@@ -85,6 +102,16 @@ public class GameView extends SurfaceView implements Runnable {
                     player.getY(),
                     paint
             );
+            // Draw the obstacles
+            for (int i = 0; i < obstacleCount; i++) {
+                canvas.drawBitmap(
+                        obstacles[i].getObstacleBitmap(),
+                        obstacles[i].getX(),
+                        obstacles[i].getY(),
+                        paint
+                );
+            }
+
             // Unlock the canvas and post the code
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
