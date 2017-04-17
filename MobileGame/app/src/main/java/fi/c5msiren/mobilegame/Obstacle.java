@@ -3,6 +3,7 @@ package fi.c5msiren.mobilegame;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 
 import java.util.Random;
 
@@ -25,6 +26,9 @@ public class Obstacle {
     private int minX;
     private int minY;
 
+    //creating a rect object for a obstacle
+    private Rect detectCollision;
+
     public Obstacle(Context context, int screenX, int screenY) {
 
         // Setting the image to obstacle
@@ -39,8 +43,10 @@ public class Obstacle {
         // Generating position for the obstacle
         Random generator = new Random();
         speed = generator.nextInt(6) + 10;
-        x = screenX;
-        y = generator.nextInt(maxY) - obstacleBitmap.getHeight();
+        obstaclePosition();
+
+        //initializing rect object
+        detectCollision = new Rect(x, y, obstacleBitmap.getWidth(), obstacleBitmap.getHeight());
     }
 
     public void update(int playerSpeed) {
@@ -50,16 +56,30 @@ public class Obstacle {
         //if the obstalce reaches the left edge
         if (x < minX - obstacleBitmap.getWidth()) {
             //adding the obstacle again to the right top or bottom edge
-            Random generator = new Random();
-            int position = generator.nextInt((1 - 0) + 1) + 0;
-            speed = generator.nextInt(10) + 10;
-            x = maxX;
-            if (position == 0) {
-                y = minY;
-            } else {
-                y = maxY - getObstacleBitmap().getHeight();
-            }
+            obstaclePosition();
         }
+
+        //Adding the top, left, bottom and right to the rect object
+        detectCollision.left = x;
+        detectCollision.top = y;
+        detectCollision.right = x + obstacleBitmap.getWidth();
+        detectCollision.bottom = y + obstacleBitmap.getHeight();
+    }
+
+    public void obstaclePosition() {
+        Random generator = new Random();
+        int position = generator.nextInt((1 - 0) + 1) + 0;
+
+        x = maxX;
+        if (position == 0) {
+            y = minY;
+        } else {
+            y = maxY - getObstacleBitmap().getHeight();
+        }
+    }
+
+    public Rect getDetectCollision() {
+        return detectCollision;
     }
 
     public Bitmap getObstacleBitmap() {
