@@ -1,9 +1,9 @@
 package fi.c5msiren.mobilegame;
 
-import android.content.Context;
+import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.SurfaceView;
+import android.view.Display;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -14,8 +14,15 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Getting display object
+        Display display = getWindowManager().getDefaultDisplay();
+
+        // Get screen resolution
+        Point size = new Point();
+        display.getSize(size);
+
         //Initializing game view object
-        gameView = new GameView(this);
+        gameView = new GameView(this, size.x, size.y);
 
         // Adding it to ContentView
         setContentView(gameView);
