@@ -1,8 +1,10 @@
 package fi.c5msiren.mobilegame;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.MotionEvent;
@@ -81,7 +83,6 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
-
     private void update() {
         // Update player position
         player.update();
@@ -91,6 +92,7 @@ public class GameView extends SurfaceView implements Runnable {
             obstacles[i].update(player.getSpeed());
         }
 
+        // Check if player collides with obstacle
         for (int i = 0; i < obstacleCount; i++) {
             if (Rect.intersects(player.getDetectCollision(), obstacles[i].getDetectCollision())) {
                 //setting playing false to stop the game
@@ -109,20 +111,37 @@ public class GameView extends SurfaceView implements Runnable {
             // Draw temp background
             canvas.drawColor(Color.BLACK);
             // Draw the player
-            canvas.drawBitmap(
-                    player.getPlayerBitmap(),
-                    player.getX(),
-                    player.getY(),
-                    paint
-            );
+            canvas.drawBitmap(player.getCurrentFrame(), player.getX(), player.getY(), paint);
             // Draw the obstacles
             for (int i = 0; i < obstacleCount; i++) {
-                canvas.drawBitmap(
-                        obstacles[i].getObstacleBitmap(),
-                        obstacles[i].getX(),
-                        obstacles[i].getY(),
-                        paint
-                );
+                // If the obstacle is at the top of screen, flip it
+                if (obstacles[i].isObstacleAtTopOfScreen()) {
+                    Matrix matrix = new Matrix();
+                    matrix.postRotate(180);
+                    Bitmap bitmap = Bitmap.createBitmap(
+                            obstacles[i].getObstacleBitmap(),
+                            0,
+                            0,
+                            obstacles[i].getObstacleBitmap().getWidth(),
+                            obstacles[i].getObstacleBitmap().getHeight(),
+                            matrix,
+                            true
+                    );
+                    canvas.drawBitmap(
+                            bitmap,
+                            obstacles[i].getX(),
+                            obstacles[i].getY(),
+                            paint
+                    );
+                } else {
+                    canvas.drawBitmap(
+                            obstacles[i].getObstacleBitmap(),
+                            obstacles[i].getX(),
+                            obstacles[i].getY(),
+                            paint
+                    );
+                }
+
             }
 
             // Unlock the canvas and post the code
