@@ -3,6 +3,7 @@ package fi.c5msiren.mobilegame;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 
 import java.util.Random;
@@ -70,12 +71,24 @@ public class Obstacle {
         Random generator = new Random();
         int position = generator.nextInt((1 - 0) + 1) + 0;
 
+        // Set X coordinate to right edge
         x = maxX;
+        // Set Y coordinate to top or bottom edge
+        // depending which number random generator created
         if (position == 0) {
             y = minY;
         } else {
             y = maxY - getObstacleBitmap().getHeight();
         }
+    }
+
+    public boolean isObstacleAtTopOfScreen() {
+        Boolean result = false;
+        if (this.y == minY) {
+            result = true;
+        }
+
+        return result;
     }
 
     public Rect getDetectCollision() {
