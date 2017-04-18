@@ -3,7 +3,13 @@ package fi.c5msiren.mobilegame;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
+
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Miika on 17.4.2017.
@@ -11,8 +17,16 @@ import android.graphics.Rect;
 
 public class Player {
 
-    // Character image
-    private Bitmap playerBitmap;
+    // Array of all the sprites in player animation
+    private ArrayList<Bitmap> playerSprites;
+
+    private int currentFrameIndex = 0;
+    // Current frame in the animation that is playing
+    private Bitmap currentFrame;
+    // How long one frame displays in the animation
+    private int animationTime;
+    private long frameTicker = (long) .01;
+
     // Coordinates
     private int x, y;
     // Player speed
@@ -34,14 +48,26 @@ public class Player {
     private Rect detectCollision;
 
     public Player(Context context, int screenX, int screenY) {
+        // Player X-position
         x = 75;
+        // Player Y-position
         y = 50;
+        // Player speed
         speed = 1;
-        // Setting the player image
-        playerBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
+
+        // Setting the player images
+        playerSprites = new ArrayList<>();
+        playerSprites.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.player_01));
+        playerSprites.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.player_02));
+        playerSprites.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.player_03));
+        playerSprites.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.player_04));
+        this.currentFrame = playerSprites.get(0);
+
+        // Setting the speed of animation. ms / fps
+        animationTime = 1000 / 15;
 
         // Calculating maxY
-        maxY = screenY - playerBitmap.getHeight();
+        maxY = screenY - playerSprites.get(currentFrameIndex).getHeight();
         // Top edge's y point is always zero
         minY = 0;
 
@@ -49,7 +75,23 @@ public class Player {
         accelerating = false;
 
         //initializing rect object
-        detectCollision =  new Rect(x, y, playerBitmap.getWidth(), playerBitmap.getHeight());
+        detectCollision =  new Rect(x, y, playerSprites.get(currentFrameIndex).getWidth(), playerSprites.get(currentFrameIndex).getHeight());
+
+        Timer timer = new Timer();
+        // Animate player every time animationTime has lasted
+        TimerTask animatePlayer = new TimerTask() {
+            @Override
+            public void run() {
+                currentFrameIndex++;
+                if (currentFrameIndex >= playerSprites.size()) {
+                    currentFrameIndex = 0;
+                }
+                currentFrame = playerSprites.get(currentFrameIndex);
+            }
+        };
+
+        timer.scheduleAtFixedRate(animatePlayer, 0, animationTime);
+
     }
 
     public void update()  {
@@ -81,11 +123,13 @@ public class Player {
         }
 
         //adding top, left, bottom and right to the rect object
-        detectCollision.left = x;
-        detectCollision.top = y;
-        detectCollision.right = x + playerBitmap.getWidth();
-        detectCollision.bottom = y + playerBitmap.getHeight();
+        detectCollision.left = x + 50;
+        detectCollision.top = y + 25;
+        detectCollision.right = x + playerSprites.get(0).getWidth() - 50;
+        detectCollision.bottom = y + playerSprites.get(0).getHeight() - 40;
     }
+
+    public Bitmap getCurrentFrame() { return currentFrame; }
 
     public Rect getDetectCollision() {
         return detectCollision;
@@ -97,10 +141,6 @@ public class Player {
 
     public void stopAccelerating() {
         accelerating = false;
-    }
-
-    public Bitmap getPlayerBitmap() {
-        return playerBitmap;
     }
 
     public int getX() {
