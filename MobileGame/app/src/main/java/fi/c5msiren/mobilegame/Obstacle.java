@@ -9,7 +9,7 @@ import android.graphics.Rect;
 import java.util.Random;
 
 /**
- * Created by Jari on 17.4.2017.
+ * Created by Miika on 17.4.2017.
  */
 
 public class Obstacle {
