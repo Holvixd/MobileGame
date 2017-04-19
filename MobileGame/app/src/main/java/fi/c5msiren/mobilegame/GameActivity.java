@@ -1,5 +1,6 @@
 package fi.c5msiren.mobilegame;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,6 +27,8 @@ public class GameActivity extends AppCompatActivity {
 
         // Adding it to ContentView
         setContentView(gameView);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
     // Pausing the game when activity is paused
