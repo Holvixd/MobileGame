@@ -10,6 +10,11 @@ import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Miika on 17.4.2017.
@@ -22,6 +27,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private Thread gameThread = null;
     private Player player;
+    private Score score;
 
     // These are used for drawing
     private Paint paint;
@@ -33,6 +39,7 @@ public class GameView extends SurfaceView implements Runnable {
     // Amount of obstacles
     private int obstacleCount = 3;
 
+    // Boolean to check if game is over
     private boolean isGameOver;
 
     public GameView(Context context, int screenX, int screenY) {
@@ -40,6 +47,8 @@ public class GameView extends SurfaceView implements Runnable {
 
         // Initialize player object
         player = new Player(context, screenX, screenY);
+        //Initialize score object
+        score = new Score("player", 0);
 
         //initializing drawing objects
         surfaceHolder = getHolder();
@@ -52,6 +61,17 @@ public class GameView extends SurfaceView implements Runnable {
         }
 
         isGameOver = false;
+
+        Timer timer = new Timer();
+        // Add score every second
+        TimerTask addScore = new TimerTask() {
+            @Override
+            public void run() {
+                score.addScore(10);
+            }
+        };
+
+        timer.schedule(addScore, 1000, 1000);
     }
 
     @Override
@@ -108,8 +128,12 @@ public class GameView extends SurfaceView implements Runnable {
         if (surfaceHolder.getSurface().isValid()) {
             // Lock the canvas so no one else can write code to the canvas
             canvas = surfaceHolder.lockCanvas();
-            // Draw temp background
+            // Draw background color
             canvas.drawColor(Color.BLACK);
+            // Draw the score
+            paint.setTextSize(30);
+            paint.setColor(Color.WHITE);
+            canvas.drawText("Score: "+score.getAmount(),100,50,paint);
             // Draw the player
             canvas.drawBitmap(player.getCurrentFrame(), player.getX(), player.getY(), paint);
             // Draw the obstacles
