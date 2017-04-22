@@ -28,7 +28,7 @@ public class GameActivity extends AppCompatActivity {
         // Adding it to ContentView
         setContentView(gameView);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
     }
 
     // Pausing the game when activity is paused
