@@ -13,6 +13,7 @@ import android.view.SurfaceView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -34,6 +35,9 @@ public class GameView extends SurfaceView implements Runnable {
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
+    // List of stars
+    private ArrayList<Star> stars = new ArrayList<>();
+
     // Array of obstacles
     private Obstacle[] obstacles;
     // Amount of obstacles
@@ -53,6 +57,13 @@ public class GameView extends SurfaceView implements Runnable {
         //initializing drawing objects
         surfaceHolder = getHolder();
         paint = new Paint();
+
+        // Adding 100 stars
+        int starAmount = 100;
+        for (int i = 0; i < starAmount; i++) {
+            Star star = new Star(screenX, screenY);
+            stars.add(star);
+        }
 
         // Initializing obstacle array
         obstacles = new Obstacle[obstacleCount];
@@ -107,9 +118,14 @@ public class GameView extends SurfaceView implements Runnable {
         // Update player position
         player.update();
 
+        // Updating the star position with player speed
+        for (Star star : stars) {
+            star.update(player.getSpeed() / 2);
+        }
+
         // Updating the obstacle coordinate with respect to player speed
         for (int i = 0; i < obstacleCount; i++) {
-            obstacles[i].update(player.getSpeed());
+            obstacles[i].update(player.getSpeed() / 2);
         }
 
         // Check if player collides with obstacle
@@ -130,9 +146,15 @@ public class GameView extends SurfaceView implements Runnable {
             canvas = surfaceHolder.lockCanvas();
             // Draw background color
             canvas.drawColor(Color.BLACK);
+            // Setting the color to white for score and stars
+            paint.setColor(Color.WHITE);
+            // Draw the stars
+            for (Star star : stars) {
+                paint.setStrokeWidth(star.getStarWidth());
+                canvas.drawPoint(star.getX(), star.getY(), paint);
+            }
             // Draw the score
             paint.setTextSize(30);
-            paint.setColor(Color.WHITE);
             canvas.drawText("Score: "+score.getAmount(),100,50,paint);
             // Draw the player
             canvas.drawBitmap(player.getCurrentFrame(), player.getX(), player.getY(), paint);
