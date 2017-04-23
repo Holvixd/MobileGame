@@ -22,13 +22,11 @@ public class GameActivity extends AppCompatActivity {
         Point size = new Point();
         display.getSize(size);
 
-        //Initializing game view object
+        // Initializing game view object
         gameView = new GameView(this, size.x, size.y);
 
         // Adding it to ContentView
         setContentView(gameView);
-
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
     // Pausing the game when activity is paused
@@ -44,4 +42,5 @@ public class GameActivity extends AppCompatActivity {
         super.onResume();
         gameView.resume();
     }
+
 }

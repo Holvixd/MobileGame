@@ -35,15 +35,15 @@ public class Player {
     // Track if the user presses the screen
     private boolean accelerating;
     // Acceleration speed
-    private int accelerationSpeed = 5;
+    private int accelerationSpeed = 3;
     // Gravity value to add gravity effect
-    private int gravity = -10;
+    private int gravity = -6;
 
     // Boundaries so player doesn't go outside the screen
     private int maxY, minY;
     // Boundaries to player speed
     private final int MIN_SPEED = 1;
-    private final int MAX_SPEED = 20;
+    private final int MAX_SPEED = 13;
 
     private Rect detectCollision;
 
