@@ -7,7 +7,7 @@ import java.util.List;
  * Interface for scores repository
  *
  * @author Miika
- * @version 2017.4.12
+ * @version 2017.4.23
  * @since 1.8
  */
 public interface ScoreRepository extends CrudRepository<MyScore, Long> {
