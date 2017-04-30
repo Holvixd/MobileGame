@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.getId() == R.id.buttonScore) {
             // If user pressed the highscore button
             // Start highscore activity
+            startActivity(new Intent(this, HighscoreActivity.class));
         }
     }
 }
