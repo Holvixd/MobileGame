@@ -40,4 +40,5 @@ task createJar(type: Copy) {
     rename('classes.jar', 'logmanagementlib.jar')
 }
 
+
 createJar.dependsOn(deleteJar, build)
