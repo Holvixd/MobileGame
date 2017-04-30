@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Adding a click listener
         buttonPlay.setOnClickListener(this);
+        buttonHighscore.setOnClickListener(this);
 
         // Initializing canvas
         Bitmap bitmap = Bitmap.createBitmap(size.x, size.y, Bitmap.Config.ARGB_8888);
