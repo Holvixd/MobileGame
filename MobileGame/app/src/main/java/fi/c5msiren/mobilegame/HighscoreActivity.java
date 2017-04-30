@@ -10,8 +10,9 @@ import android.widget.Toast;
 public class HighscoreActivity extends AppCompatActivity {
 
     ListView list;
-    String[] web = new String[] { "Android", "iPhone", "WindowsMobile",
+    String[] name = new String[] { "Android", "iPhone", "WindowsMobile",
             "Blackberry", "WebOS", "Ubuntu", "Windows7"};
+    int[] score = new int[] {350, 252, 235, 730, 134, 525, 623};
     Integer[] imageId = {
             R.drawable.one,
             R.drawable.two,
@@ -28,7 +29,7 @@ public class HighscoreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_highscore);
 
         HighscoreArrayAdapter adapter = new
-                HighscoreArrayAdapter(HighscoreActivity.this, web, imageId);
+                HighscoreArrayAdapter(HighscoreActivity.this, name, score, imageId);
         list = (ListView)findViewById(R.id.listview);
         list.setAdapter(adapter);
 
@@ -37,7 +38,7 @@ public class HighscoreActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Toast.makeText(HighscoreActivity.this, "Player: " +web[+ position], Toast.LENGTH_SHORT).show();
+                Toast.makeText(HighscoreActivity.this, "Player: " + name[+ position] + " Score: " + score[+ position], Toast.LENGTH_SHORT).show();
 
             }
         });
