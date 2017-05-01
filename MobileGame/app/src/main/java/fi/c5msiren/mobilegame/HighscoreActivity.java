@@ -23,6 +23,10 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class HighscoreActivity extends AppCompatActivity {
 
@@ -64,6 +68,9 @@ public class HighscoreActivity extends AppCompatActivity {
                 while ((line = reader.readLine()) != null) {
                     jsonScores = new JSONArray(line);
                 }
+
+                // Sort the array by the score
+                jsonScores = sortScores(jsonScores);
 
                 // The list only shows the best 9 scores, if it fetches more only display nine.
                 if (jsonScores.length() > 9) {
@@ -139,6 +146,44 @@ public class HighscoreActivity extends AppCompatActivity {
 
                 }
             });
+        }
+
+        public JSONArray sortScores(JSONArray unsorted) throws JSONException {
+
+            JSONArray sorted = new JSONArray();
+            List<JSONObject> jsonValues = new ArrayList<JSONObject>();
+            for (int i = 0; i < unsorted.length(); i++) {
+                jsonValues.add(unsorted.getJSONObject(i));
+            }
+
+            Collections.sort( jsonValues, new Comparator<JSONObject>() {
+                //Sort the collection by score
+                private static final String KEY_NAME = "score";
+
+                @Override
+                public int compare(JSONObject a, JSONObject b) {
+                    Integer valA = new Integer(0);
+                    Integer valB = new Integer(0);
+
+                    try {
+                        valA = (Integer) a.get(KEY_NAME);
+                        valB = (Integer) b.get(KEY_NAME);
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return -valA.compareTo(valB);
+                    //if you want to change the sort order, simply use the following:
+                    //return valA.compareTo(valB);
+                }
+            });
+
+            for (int i = 0; i < unsorted.length(); i++) {
+                sorted.put(jsonValues.get(i));
+            }
+
+            return sorted;
         }
 
     }
