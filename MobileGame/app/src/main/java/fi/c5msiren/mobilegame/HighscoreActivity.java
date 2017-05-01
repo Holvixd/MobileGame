@@ -41,6 +41,8 @@ public class HighscoreActivity extends AppCompatActivity {
     // Integer array for storing the images
     Integer[] imageId;
 
+    private boolean connectingToServer = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +59,10 @@ public class HighscoreActivity extends AppCompatActivity {
 
             try {
                 // Connect to the backend
+                connectingToServer = true;
                 URL url = new URL("http://10.0.2.2:8080/scores");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(5000);
 
                 InputStream in = conn.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -110,6 +114,7 @@ public class HighscoreActivity extends AppCompatActivity {
 
             // If cant connect to backend server, show error message
             } catch(MalformedURLException | SocketTimeoutException | ProtocolException e) {
+                connectingToServer = false;
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     @Override
@@ -131,21 +136,23 @@ public class HighscoreActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
 
-            // Create new adapter with the fetched data
-            HighscoreArrayAdapter adapter = new
-                    HighscoreArrayAdapter(HighscoreActivity.this, name, score, imageId);
-            list = (ListView)findViewById(R.id.listview);
-            list.setAdapter(adapter);
+            if (connectingToServer) {
+                // Create new adapter with the fetched data
+                HighscoreArrayAdapter adapter = new
+                        HighscoreArrayAdapter(HighscoreActivity.this, name, score, imageId);
+                list = (ListView)findViewById(R.id.listview);
+                list.setAdapter(adapter);
 
-            // On click show the score information
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-                    Toast.makeText(HighscoreActivity.this, "Player: " + name[+ position] + " Score: " + score[+ position], Toast.LENGTH_SHORT).show();
+                // On click show the score information
+                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view,
+                                            int position, long id) {
+                        Toast.makeText(HighscoreActivity.this, "Player: " + name[+ position] + " Score: " + score[+ position], Toast.LENGTH_SHORT).show();
 
-                }
-            });
+                    }
+                });
+            }
         }
 
         public JSONArray sortScores(JSONArray unsorted) throws JSONException {
