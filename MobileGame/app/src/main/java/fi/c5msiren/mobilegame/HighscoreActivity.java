@@ -31,17 +31,17 @@ import java.util.List;
 public class HighscoreActivity extends AppCompatActivity {
 
     // ListView for showing all the scores
-    ListView list;
+    private ListView list;
     // JSONArray for storing the data fetched from backend
-    JSONArray jsonScores = new JSONArray();
+    private JSONArray jsonScores = new JSONArray();
     // String array for storing the name of players
-    String[] name;
+    private String[] name;
     // Integer array for storing the player scores
-    int[] score;
+    private int[] score;
     // Integer array for storing the images
-    Integer[] imageId;
-
-    private boolean connectingToServer = false;
+    private Integer[] imageId;
+    // Check if managed to connect to server
+    private boolean connectToServer = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,7 @@ public class HighscoreActivity extends AppCompatActivity {
 
             try {
                 // Connect to the backend
-                connectingToServer = true;
+                connectToServer = true;
                 URL url = new URL("http://10.0.2.2:8080/scores");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setConnectTimeout(5000);
@@ -114,7 +114,8 @@ public class HighscoreActivity extends AppCompatActivity {
 
             // If cant connect to backend server, show error message
             } catch(MalformedURLException | SocketTimeoutException | ProtocolException e) {
-                connectingToServer = false;
+                // Connecting to server failed
+                connectToServer = false;
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     @Override
@@ -136,7 +137,7 @@ public class HighscoreActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
 
-            if (connectingToServer) {
+            if (connectToServer) {
                 // Create new adapter with the fetched data
                 HighscoreArrayAdapter adapter = new
                         HighscoreArrayAdapter(HighscoreActivity.this, name, score, imageId);
