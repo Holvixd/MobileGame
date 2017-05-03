@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Adding a click listener
         buttonPlay.setOnClickListener(this);
+        buttonHighscore.setOnClickListener(this);
 
         // Initializing canvas
         Bitmap bitmap = Bitmap.createBitmap(size.x, size.y, Bitmap.Config.ARGB_8888);
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.getId() == R.id.buttonScore) {
             // If user pressed the highscore button
             // Start highscore activity
+            startActivity(new Intent(this, HighscoreActivity.class));
         }
     }
 }
