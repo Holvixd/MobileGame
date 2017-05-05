@@ -1,5 +1,6 @@
 package fi.c5msiren.mobilegame;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -10,8 +11,6 @@ import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -26,6 +25,7 @@ public class GameView extends SurfaceView implements Runnable {
     // Boolean variable to track if the game is playing or not
     volatile boolean playing;
 
+    private Activity activity;
     private Thread gameThread = null;
     private Player player;
     private Score score;
@@ -49,6 +49,8 @@ public class GameView extends SurfaceView implements Runnable {
     public GameView(Context context, int screenX, int screenY) {
         super(context);
 
+        // Save reference of the activity
+        this.activity = (Activity) context;
         // Initialize player object
         player = new Player(context, screenX, screenY);
         //Initialize score object
@@ -135,6 +137,8 @@ public class GameView extends SurfaceView implements Runnable {
                 playing = false;
                 //setting the isGameOver true as the game is over
                 isGameOver = true;
+                // Send the current score to the back end
+                new sendScore(activity, score).execute("");
             }
         }
     }
@@ -206,7 +210,6 @@ public class GameView extends SurfaceView implements Runnable {
     public void pause() {
 
         playing = false;
-
         // Stopping the thread
         try {
             gameThread.join();

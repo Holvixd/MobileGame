@@ -33,9 +33,7 @@ import java.util.List;
 public class getScores extends AsyncTask<String, String, String> {
 
     // Reference to the activity that calls this class
-    public Activity activity;
-    // ListView for showing all the scores
-    private ListView list;
+    private Activity activity;
     // JSONArray for storing the data fetched from backend
     private JSONArray jsonScores = new JSONArray();
     // String array for storing the name of players
@@ -110,7 +108,7 @@ public class getScores extends AsyncTask<String, String, String> {
             conn.disconnect();
 
             // If cant connect to backend server, show error message
-        } catch(MalformedURLException | SocketTimeoutException | ProtocolException e) {
+        } catch (MalformedURLException | SocketTimeoutException | ProtocolException e) {
             // Connecting to server failed
             connectToServer = false;
             Handler handler = new Handler(Looper.getMainLooper());
@@ -138,7 +136,7 @@ public class getScores extends AsyncTask<String, String, String> {
             // Create new adapter with the fetched data
             HighscoreArrayAdapter adapter = new
                     HighscoreArrayAdapter(activity, name, score, imageId);
-            list = (ListView)activity.findViewById(R.id.listview);
+            ListView list = (ListView) activity.findViewById(R.id.listview);
             list.setAdapter(adapter);
 
             // On click show the score information

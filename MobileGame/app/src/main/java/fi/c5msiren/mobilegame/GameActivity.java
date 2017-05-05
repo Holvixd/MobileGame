@@ -1,6 +1,5 @@
 package fi.c5msiren.mobilegame;
 
-import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
