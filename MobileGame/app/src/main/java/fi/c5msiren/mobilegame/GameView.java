@@ -48,8 +48,6 @@ public class GameView extends SurfaceView implements Runnable {
     // Amount of obstacles
     private int obstacleCount = 3;
 
-    final int MY_PERMISSIONS_ID = 1;
-
     public GameView(Context context, int screenX, int screenY, String playerName) {
         super(context);
 
@@ -82,8 +80,8 @@ public class GameView extends SurfaceView implements Runnable {
             obstacles[i] = new Obstacle(context, screenX, screenY);
         }
 
+        // Add 10 score every second
         Timer timer = new Timer();
-        // Add score every second
         TimerTask addScore = new TimerTask() {
             @Override
             public void run() {
@@ -140,8 +138,7 @@ public class GameView extends SurfaceView implements Runnable {
         // Check if player collides with obstacle
         for (int i = 0; i < obstacleCount; i++) {
             if (Rect.intersects(player.getDetectCollision(), obstacles[i].getDetectCollision())) {
-                //setting playing false to stop the game
-                //playing = false;
+
                 // Send the current score to the back end
                 new sendScore(activity, score.getAmount(), score.getName()).execute("");
                 // Reset score
@@ -214,6 +211,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void control() {
+        // Game aims to run at 60fps
         try {
             gameThread.sleep(17);
         } catch (InterruptedException e) {
@@ -223,8 +221,8 @@ public class GameView extends SurfaceView implements Runnable {
 
     public void pause() {
 
-        playing = false;
         // Stopping the thread
+        playing = false;
         try {
             gameThread.join();
         } catch (InterruptedException e) {
