@@ -30,13 +30,14 @@ public class sendScore extends AsyncTask<String, String, String> {
 
     // Reference to the activity that calls this class
     private Activity activity;
-    // Reference to the player score
-    private Score score;
+    // Reference to the player score amount and name
+    private int amount;
+    private String name;
 
-    public sendScore(Activity activity, Score score) {
-        System.out.println("THIS GETS CALLED!!");
+    public sendScore(Activity activity, int amount, String name) {
         this.activity = activity;
-        this.score = score;
+        this.amount = amount;
+        this.name = name;
     }
 
     @Override
@@ -55,8 +56,8 @@ public class sendScore extends AsyncTask<String, String, String> {
 
             // Add the score information to JSON object
             JSONObject jsonParam = new JSONObject();
-            jsonParam.put("name", score.getName());
-            jsonParam.put("score", score.getAmount());
+            jsonParam.put("name", name);
+            jsonParam.put("score", amount);
 
             // Send the JSON data to the server
             OutputStream os = conn.getOutputStream();
@@ -95,7 +96,6 @@ public class sendScore extends AsyncTask<String, String, String> {
     // After fetching the data show it on the adapter
     @Override
     protected void onPostExecute(String result) {
-        // Reset score
-        score.setScore(0);
+
     }
 }

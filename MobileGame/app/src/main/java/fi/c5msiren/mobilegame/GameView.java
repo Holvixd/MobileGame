@@ -138,7 +138,9 @@ public class GameView extends SurfaceView implements Runnable {
                 //setting the isGameOver true as the game is over
                 isGameOver = true;
                 // Send the current score to the back end
-                new sendScore(activity, score).execute("");
+                new sendScore(activity, score.getAmount(), score.getName()).execute("");
+                // Reset score
+                score.setScore(0);
             }
         }
     }
