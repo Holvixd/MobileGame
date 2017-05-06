@@ -37,8 +37,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Getting the ImageView
+        // Getting the ImageView where to draw stars
         mImageView = (ImageView) findViewById(R.id.iv);
+
         // Getting the start button
         buttonPlay = (ImageButton) findViewById(R.id.buttonPlay);
         // Getting the highscore button

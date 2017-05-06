@@ -64,7 +64,9 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        gameView.pause();
+
+        if (gameView != null)
+            gameView.pause();
     }
 
     // Running the game when activity is resumed
@@ -72,9 +74,8 @@ public class GameActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (gameView != null) {
+        if (gameView != null)
             gameView.resume();
-        }
     }
 
 }
