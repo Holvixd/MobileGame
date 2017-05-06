@@ -60,4 +60,21 @@ public class GameActivity extends AppCompatActivity {
         builder.show();
     }
 
+    // Pausing the game when activity is paused
+    @Override
+    protected void onPause() {
+        super.onPause();
+        gameView.pause();
+    }
+
+    // Running the game when activity is resumed
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (gameView != null) {
+            gameView.resume();
+        }
+    }
+
 }

@@ -157,6 +157,10 @@ public class GameView extends SurfaceView implements Runnable {
     private void draw() {
         // Check if surface is valid
         if (surfaceHolder.getSurface().isValid()) {
+
+            if (canvas == null) {
+                canvas = new Canvas();
+            }
             // Lock the canvas so no one else can write code to the canvas
             canvas = surfaceHolder.lockCanvas();
             // Draw background color
