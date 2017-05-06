@@ -24,6 +24,7 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Set content view temporarily to activity_game
+        // so it will have black background while typing the player name
         setContentView(R.layout.activity_game);
 
         // Getting display object
