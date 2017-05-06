@@ -1,13 +1,18 @@
 package fi.c5msiren.mobilegame;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.provider.ContactsContract;
+import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -25,7 +30,6 @@ public class GameView extends SurfaceView implements Runnable {
     // Boolean variable to track if the game is playing or not
     volatile boolean playing;
 
-    private Activity activity;
     private Thread gameThread = null;
     private Player player;
     private Score score;
@@ -35,6 +39,12 @@ public class GameView extends SurfaceView implements Runnable {
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
+    // References for the activity and screen sizes;
+    private Activity activity;
+    private Context context;
+    private int screenX;
+    private int screenY;
+
     // List of stars
     private ArrayList<Star> stars = new ArrayList<>();
 
@@ -43,22 +53,26 @@ public class GameView extends SurfaceView implements Runnable {
     // Amount of obstacles
     private int obstacleCount = 3;
 
-    // Boolean to check if game is over
-    private boolean isGameOver;
+    final int MY_PERMISSIONS_ID = 1;
 
-    public GameView(Context context, int screenX, int screenY) {
+    public GameView(Context context, int screenX, int screenY, String playerName) {
         super(context);
 
-        // Save reference of the activity
+        // Save references
         this.activity = (Activity) context;
+        this.context = context;
+        this.screenX = screenX;
+        this.screenY = screenY;
         // Initialize player object
         player = new Player(context, screenX, screenY);
+
         //Initialize score object
-        score = new Score("player", 0);
+        score = new Score(playerName, 0);
 
         //initializing drawing objects
         surfaceHolder = getHolder();
         paint = new Paint();
+        canvas = new Canvas();
 
         // Adding 100 stars
         int starAmount = 100;
@@ -72,8 +86,6 @@ public class GameView extends SurfaceView implements Runnable {
         for (int i = 0; i < obstacleCount; i++) {
             obstacles[i] = new Obstacle(context, screenX, screenY);
         }
-
-        isGameOver = false;
 
         Timer timer = new Timer();
         // Add score every second
@@ -134,13 +146,18 @@ public class GameView extends SurfaceView implements Runnable {
         for (int i = 0; i < obstacleCount; i++) {
             if (Rect.intersects(player.getDetectCollision(), obstacles[i].getDetectCollision())) {
                 //setting playing false to stop the game
-                playing = false;
-                //setting the isGameOver true as the game is over
-                isGameOver = true;
+                //playing = false;
                 // Send the current score to the back end
                 new sendScore(activity, score.getAmount(), score.getName()).execute("");
                 // Reset score
                 score.setScore(0);
+
+                // Create new obstacles
+                for (int j = 0; j < obstacleCount; j++) {
+                    obstacles[j] = new Obstacle(context, screenX, screenY);
+                }
+                // Reset player position
+                player.setY(250);
             }
         }
     }
