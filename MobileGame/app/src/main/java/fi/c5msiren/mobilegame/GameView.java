@@ -180,10 +180,11 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.drawBitmap(player.getCurrentFrame(), player.getX(), player.getY(), paint);
             // Draw the obstacles
             for (int i = 0; i < obstacleCount; i++) {
-                // If the obstacle is at the top of screen, flip it
+                // If the obstacle is at the top of screen, flip it and then draw it
                 if (obstacles[i].isObstacleAtTopOfScreen()) {
                     Matrix matrix = new Matrix();
                     matrix.postRotate(180);
+
                     Bitmap bitmap = Bitmap.createBitmap(
                             obstacles[i].getObstacleBitmap(),
                             0,
@@ -193,6 +194,7 @@ public class GameView extends SurfaceView implements Runnable {
                             matrix,
                             true
                     );
+
                     canvas.drawBitmap(
                             bitmap,
                             obstacles[i].getX(),
@@ -200,8 +202,16 @@ public class GameView extends SurfaceView implements Runnable {
                             paint
                     );
                 } else {
+                    // if the obstacle is at the bottom of the screen
+                    // make it 1.4 times bigger and draw it.
+                    Bitmap bitmap = Bitmap.createScaledBitmap(obstacles[i].getObstacleBitmap(),
+                            (int) (obstacles[i].getObstacleBitmap().getWidth() * 1.4),
+                            (int) (obstacles[i].getObstacleBitmap().getHeight() * 1.4),
+                            true
+                    );
+
                     canvas.drawBitmap(
-                            obstacles[i].getObstacleBitmap(),
+                            bitmap,
                             obstacles[i].getX(),
                             obstacles[i].getY(),
                             paint
