@@ -123,7 +123,7 @@ public class Player {
         //adding top, left, bottom and right to the rect object
         detectCollision.left = x + 50;
         detectCollision.top = y + 25;
-        detectCollision.right = x + playerSprites.get(0).getWidth() - 50;
+        detectCollision.right = x + playerSprites.get(0).getWidth() - 60;
         detectCollision.bottom = y + playerSprites.get(0).getHeight() - 90;
     }
 
