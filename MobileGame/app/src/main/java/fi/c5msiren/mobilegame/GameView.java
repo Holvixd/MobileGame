@@ -1,5 +1,6 @@
 package fi.c5msiren.mobilegame;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -10,8 +11,6 @@ import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -35,6 +34,12 @@ public class GameView extends SurfaceView implements Runnable {
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
+    // References for the activity and screen sizes;
+    private Activity activity;
+    private Context context;
+    private int screenX;
+    private int screenY;
+
     // List of stars
     private ArrayList<Star> stars = new ArrayList<>();
 
@@ -43,20 +48,25 @@ public class GameView extends SurfaceView implements Runnable {
     // Amount of obstacles
     private int obstacleCount = 3;
 
-    // Boolean to check if game is over
-    private boolean isGameOver;
-
-    public GameView(Context context, int screenX, int screenY) {
+    public GameView(Context context, int screenX, int screenY, String playerName) {
         super(context);
+
+        // Save references
+        this.activity = (Activity) context;
+        this.context = context;
+        this.screenX = screenX;
+        this.screenY = screenY;
 
         // Initialize player object
         player = new Player(context, screenX, screenY);
+
         //Initialize score object
-        score = new Score("player", 0);
+        score = new Score(playerName, 0);
 
         //initializing drawing objects
         surfaceHolder = getHolder();
         paint = new Paint();
+        canvas = new Canvas();
 
         // Adding 100 stars
         int starAmount = 100;
@@ -71,10 +81,8 @@ public class GameView extends SurfaceView implements Runnable {
             obstacles[i] = new Obstacle(context, screenX, screenY);
         }
 
-        isGameOver = false;
-
+        // Add 10 score every second
         Timer timer = new Timer();
-        // Add score every second
         TimerTask addScore = new TimerTask() {
             @Override
             public void run() {
@@ -131,10 +139,18 @@ public class GameView extends SurfaceView implements Runnable {
         // Check if player collides with obstacle
         for (int i = 0; i < obstacleCount; i++) {
             if (Rect.intersects(player.getDetectCollision(), obstacles[i].getDetectCollision())) {
-                //setting playing false to stop the game
-                playing = false;
-                //setting the isGameOver true as the game is over
-                isGameOver = true;
+
+                // Send the current score to the back end
+                new sendScore(activity, score.getAmount(), score.getName()).execute("");
+                // Reset score
+                score.setScore(0);
+
+                // Create new obstacles
+                for (int j = 0; j < obstacleCount; j++) {
+                    obstacles[j] = new Obstacle(context, screenX, screenY);
+                }
+                // Reset player position
+                player.setY(screenY / 2 - 100);
             }
         }
     }
@@ -142,6 +158,10 @@ public class GameView extends SurfaceView implements Runnable {
     private void draw() {
         // Check if surface is valid
         if (surfaceHolder.getSurface().isValid()) {
+
+            if (canvas == null) {
+                canvas = new Canvas();
+            }
             // Lock the canvas so no one else can write code to the canvas
             canvas = surfaceHolder.lockCanvas();
             // Draw background color
@@ -160,10 +180,11 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.drawBitmap(player.getCurrentFrame(), player.getX(), player.getY(), paint);
             // Draw the obstacles
             for (int i = 0; i < obstacleCount; i++) {
-                // If the obstacle is at the top of screen, flip it
+                // If the obstacle is at the top of screen, flip it and then draw it
                 if (obstacles[i].isObstacleAtTopOfScreen()) {
                     Matrix matrix = new Matrix();
                     matrix.postRotate(180);
+
                     Bitmap bitmap = Bitmap.createBitmap(
                             obstacles[i].getObstacleBitmap(),
                             0,
@@ -173,6 +194,7 @@ public class GameView extends SurfaceView implements Runnable {
                             matrix,
                             true
                     );
+
                     canvas.drawBitmap(
                             bitmap,
                             obstacles[i].getX(),
@@ -180,8 +202,16 @@ public class GameView extends SurfaceView implements Runnable {
                             paint
                     );
                 } else {
+                    // if the obstacle is at the bottom of the screen
+                    // make it 1.4 times bigger and draw it.
+                    Bitmap bitmap = Bitmap.createScaledBitmap(obstacles[i].getObstacleBitmap(),
+                            (int) (obstacles[i].getObstacleBitmap().getWidth() * 1.4),
+                            (int) (obstacles[i].getObstacleBitmap().getHeight() * 1.4),
+                            true
+                    );
+
                     canvas.drawBitmap(
-                            obstacles[i].getObstacleBitmap(),
+                            bitmap,
                             obstacles[i].getX(),
                             obstacles[i].getY(),
                             paint
@@ -196,6 +226,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void control() {
+        // Game aims to run at 60fps
         try {
             gameThread.sleep(17);
         } catch (InterruptedException e) {
@@ -205,9 +236,8 @@ public class GameView extends SurfaceView implements Runnable {
 
     public void pause() {
 
-        playing = false;
-
         // Stopping the thread
+        playing = false;
         try {
             gameThread.join();
         } catch (InterruptedException e) {

@@ -3,7 +3,6 @@ package fi.c5msiren.mobilegame;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.graphics.Rect;
 
 import java.util.Random;
@@ -47,7 +46,15 @@ public class Obstacle {
         obstaclePosition();
 
         //initializing rect object
-        detectCollision = new Rect(x, y, obstacleBitmap.getWidth(), obstacleBitmap.getHeight());
+        if (isObstacleAtTopOfScreen()) {
+            // If at the top of the screen make normal size
+            detectCollision = new Rect(x, y, obstacleBitmap.getWidth(), obstacleBitmap.getHeight());
+        } else {
+            // Else make 1.4 times bigger version
+            detectCollision = new Rect(x, y, (int) (obstacleBitmap.getWidth() * 1.4),
+                    (int) (obstacleBitmap.getHeight() * 1.4));
+        }
+
     }
 
     public void update(int playerSpeed) {
@@ -78,7 +85,7 @@ public class Obstacle {
         if (position == 0) {
             y = minY;
         } else {
-            y = maxY - getObstacleBitmap().getHeight();
+            y = maxY - (int) (getObstacleBitmap().getHeight() * 1.4);
         }
     }
 

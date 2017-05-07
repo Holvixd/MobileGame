@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
@@ -38,8 +37,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Getting the ImageView
+        // Getting the ImageView where to draw stars
         mImageView = (ImageView) findViewById(R.id.iv);
+
         // Getting the start button
         buttonPlay = (ImageButton) findViewById(R.id.buttonPlay);
         // Getting the highscore button

@@ -3,8 +3,6 @@ package fi.c5msiren.mobilegame;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Rect;
 
 import java.util.ArrayList;
@@ -51,7 +49,7 @@ public class Player {
         // Player X-position
         x = 75;
         // Player Y-position
-        y = 50;
+        y = screenY / 2 - 100;
         // Player speed
         speed = 1;
 
@@ -123,10 +121,10 @@ public class Player {
         }
 
         //adding top, left, bottom and right to the rect object
-        detectCollision.left = x + 50;
+        detectCollision.left = x + 30;
         detectCollision.top = y + 25;
-        detectCollision.right = x + playerSprites.get(0).getWidth() - 50;
-        detectCollision.bottom = y + playerSprites.get(0).getHeight() - 40;
+        detectCollision.right = x + playerSprites.get(0).getWidth() - 60;
+        detectCollision.bottom = y + playerSprites.get(0).getHeight() - 50;
     }
 
     public Bitmap getCurrentFrame() { return currentFrame; }
@@ -147,9 +145,13 @@ public class Player {
         return x;
     }
 
+    public void setX(int x) { this.x = x; }
+
     public int getY() {
         return y;
     }
+
+    public void setY(int y) { this.y = y; }
 
     public int getSpeed() {
         return speed;
