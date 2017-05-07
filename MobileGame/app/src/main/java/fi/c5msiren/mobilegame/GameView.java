@@ -57,8 +57,6 @@ public class GameView extends SurfaceView implements Runnable {
         this.screenX = screenX;
         this.screenY = screenY;
 
-        System.out.println("SCREENY: " + screenY);
-        System.out.println("SCREENX: " + screenX);
         // Initialize player object
         player = new Player(context, screenX, screenY);
 
