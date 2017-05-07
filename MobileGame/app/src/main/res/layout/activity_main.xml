@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorBlack"
     tools:context="fi.c5msiren.mobilegame.MainActivity">
-      
+
     <ImageView
         android:id="@+id/iv"
         android:layout_width="wrap_content"
