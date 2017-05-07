@@ -55,7 +55,7 @@ public class getScores extends AsyncTask<String, String, String> {
         try {
             // Connect to the backend
             connectToServer = true;
-            URL url = new URL("http://10.0.2.2:8080/scores");
+            URL url = new URL("https://hidden-anchorage-16513.herokuapp.com/scores");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setConnectTimeout(5000);
 
