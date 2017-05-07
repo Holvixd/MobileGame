@@ -7,7 +7,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/player_01"
-        android:label="SPACEBOY"
+        android:label="Spaceboy"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
