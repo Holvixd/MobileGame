@@ -121,10 +121,10 @@ public class Player {
         }
 
         //adding top, left, bottom and right to the rect object
-        detectCollision.left = x + 50;
+        detectCollision.left = x + 30;
         detectCollision.top = y + 25;
         detectCollision.right = x + playerSprites.get(0).getWidth() - 60;
-        detectCollision.bottom = y + playerSprites.get(0).getHeight() - 90;
+        detectCollision.bottom = y + playerSprites.get(0).getHeight() - 50;
     }
 
     public Bitmap getCurrentFrame() { return currentFrame; }
