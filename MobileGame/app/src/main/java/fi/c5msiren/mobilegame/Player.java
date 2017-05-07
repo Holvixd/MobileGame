@@ -49,7 +49,7 @@ public class Player {
         // Player X-position
         x = 75;
         // Player Y-position
-        y = 250;
+        y = screenY / 2 - 100;
         // Player speed
         speed = 1;
 
